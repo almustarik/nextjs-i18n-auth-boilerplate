@@ -1,0 +1,47 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "about": "À propos",
+    "dashboard": "Tableau de bord"
+  },
+  "actions": {
+    "signIn": "Se connecter"
+  },
+  "auth": {
+    "signIn": "Se connecter",
+    "signInDescription": "Choisissez votre méthode de connexion préférée",
+    "signInWithGoogle": "Continuer avec Google",
+    "signInWithGitHub": "Continuer avec GitHub",
+    "signInWithFacebook": "Continuer avec Facebook",
+    "oauthNotConfigured": "Fournisseurs OAuth non configurés. Utilisez la connexion de démonstration pour les tests."
+  },
+  "settings": {
+    "themes": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Système"
+    },
+    "title": "Paramètres",
+    "description": "Ceci est la page des paramètres."
+  },
+  "home": {
+    "title": "Bienvenue sur la page d'accueil",
+    "description": "Ceci est une page d'accueil simplifiée pour votre boilerplate."
+  },
+  "about": {
+    "title": "À propos de nous",
+    "description": "Ceci est la page à propos de nous."
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "description": "Bienvenue sur votre tableau de bord."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Ceci est la page des notifications."
+  },
+  "projects": {
+    "title": "Projets",
+    "description": "Ceci est la page des projets."
+  }
+}

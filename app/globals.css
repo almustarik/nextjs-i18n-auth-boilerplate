@@ -1,0 +1,131 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(0.97 0.005 240); /* Light gray background #f1f5f9 */
+  --foreground: oklch(0.25 0.015 240); /* Dark gray text #1f2937 */
+  --card: oklch(1 0 0); /* White for cards */
+  --card-foreground: oklch(0.25 0.015 240); /* Dark gray for card text */
+  --popover: oklch(1 0 0); /* White for popovers */
+  --popover-foreground: oklch(0.25 0.015 240); /* Dark gray for popover text */
+  --primary: oklch(0.25 0.015 240); /* Gray-800 for primary elements */
+  --primary-foreground: oklch(1 0 0); /* White for primary text on dark backgrounds */
+  --secondary: oklch(0.5 0.01 240); /* Medium gray #6b7280 */
+  --secondary-foreground: oklch(1 0 0); /* White for secondary text */
+  --muted: oklch(0.98 0.003 240); /* Off-white for muted sections #f8fafc */
+  --muted-foreground: oklch(0.25 0.015 240); /* Dark gray for muted text */
+  --accent: oklch(0.65 0.15 280); /* Purple accent #8b5cf6 */
+  --accent-foreground: oklch(1 0 0); /* White for accent text */
+  --destructive: oklch(0.6 0.2 25); /* Red for errors #ef4444 */
+  --destructive-foreground: oklch(1 0 0); /* White for destructive text */
+  --border: oklch(0.9 0.005 240); /* Light gray borders #e5e7eb */
+  --input: oklch(1 0 0); /* White for inputs */
+  --ring: oklch(0.65 0.15 280); /* Purple for focus rings */
+  --chart-1: oklch(0.6 0.15 260); /* Blue for charts */
+  --chart-2: oklch(0.7 0.15 140); /* Green for charts */
+  --chart-3: oklch(0.8 0.15 80); /* Yellow for charts */
+  --chart-4: oklch(0.7 0.15 20); /* Red for charts */
+  --chart-5: oklch(0.65 0.15 280); /* Purple for charts */
+  --radius: 0.5rem;
+  --sidebar: oklch(0.97 0.005 240); /* Sidebar background */
+  --sidebar-foreground: oklch(0.25 0.015 240); /* Sidebar text */
+  --sidebar-primary: oklch(1 0 0); /* Sidebar primary background */
+  --sidebar-primary-foreground: oklch(0.25 0.015 240); /* Sidebar primary text */
+  --sidebar-accent: oklch(0.65 0.15 280); /* Sidebar accent */
+  --sidebar-accent-foreground: oklch(1 0 0); /* Sidebar accent text */
+  --sidebar-border: oklch(0.9 0.005 240); /* Sidebar border */
+  --sidebar-ring: oklch(0.65 0.15 280); /* Sidebar focus ring */
+}
+
+.dark {
+  --background: oklch(0.15 0.015 240); /* Dark background */
+  --foreground: oklch(0.95 0.005 240); /* Light text */
+  --card: oklch(0.18 0.015 240); /* Dark cards */
+  --card-foreground: oklch(0.95 0.005 240); /* Light card text */
+  --popover: oklch(0.18 0.015 240); /* Dark popovers */
+  --popover-foreground: oklch(0.95 0.005 240); /* Light popover text */
+  --primary: oklch(0.95 0.005 240); /* Light primary */
+  --primary-foreground: oklch(0.15 0.015 240); /* Dark primary text */
+  --secondary: oklch(0.25 0.015 240); /* Dark secondary */
+  --secondary-foreground: oklch(0.95 0.005 240); /* Light secondary text */
+  --muted: oklch(0.22 0.015 240); /* Dark muted */
+  --muted-foreground: oklch(0.7 0.01 240); /* Medium muted text */
+  --accent: oklch(0.7 0.15 280); /* Brighter purple in dark mode */
+  --accent-foreground: oklch(1 0 0); /* White accent text */
+  --destructive: oklch(0.55 0.2 25); /* Darker red for dark mode */
+  --destructive-foreground: oklch(0.9 0.1 25); /* Light destructive text */
+  --border: oklch(0.25 0.015 240); /* Dark borders */
+  --input: oklch(0.22 0.015 240); /* Dark inputs */
+  --ring: oklch(0.7 0.15 280); /* Purple focus rings */
+  --chart-1: oklch(0.55 0.2 260); /* Darker blue for charts */
+  --chart-2: oklch(0.6 0.2 140); /* Darker green for charts */
+  --chart-3: oklch(0.75 0.2 80); /* Darker yellow for charts */
+  --chart-4: oklch(0.6 0.2 20); /* Darker red for charts */
+  --chart-5: oklch(0.7 0.15 280); /* Purple for charts */
+  --sidebar: oklch(0.12 0.015 240); /* Darker sidebar */
+  --sidebar-foreground: oklch(0.95 0.005 240); /* Light sidebar text */
+  --sidebar-primary: oklch(0.7 0.15 280); /* Purple sidebar primary */
+  --sidebar-primary-foreground: oklch(1 0 0); /* White sidebar primary text */
+  --sidebar-accent: oklch(0.25 0.015 240); /* Dark sidebar accent */
+  --sidebar-accent-foreground: oklch(0.95 0.005 240); /* Light sidebar accent text */
+  --sidebar-border: oklch(0.25 0.015 240); /* Dark sidebar border */
+  --sidebar-ring: oklch(0.7 0.15 280); /* Purple sidebar focus ring */
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "navigation": {
+    "home": "হোম",
+    "about": "আমাদের সম্পর্কে",
+    "dashboard": "ড্যাশবোর্ড"
+  },
+  "actions": {
+    "signIn": "সাইন ইন"
+  },
+  "auth": {
+    "signIn": "সাইন ইন",
+    "signInDescription": "আপনার পছন্দের সাইন-ইন পদ্ধতি নির্বাচন করুন",
+    "signInWithGoogle": "গুগল দিয়ে চালিয়ে যান",
+    "signInWithGitHub": "গিটহাব দিয়ে চালিয়ে যান",
+    "signInWithFacebook": "ফেসবুক দিয়ে চালিয়ে যান",
+    "oauthNotConfigured": "OAuth প্রদানকারী কনফিগার করা হয়নি। পরীক্ষার জন্য ডেমো লগইন ব্যবহার করুন।"
+  },
+  "settings": {
+    "themes": {
+      "light": "আলো",
+      "dark": "অন্ধকার",
+      "system": "সিস্টেম"
+    },
+    "title": "সেটিংস",
+    "description": "এটি সেটিংস পৃষ্ঠা।"
+  },
+  "home": {
+    "title": "হোমপেজে স্বাগতম",
+    "description": "এটি আপনার বয়লারপ্লেটের জন্য একটি সরলীকৃত হোমপেজ।"
+  },
+  "about": {
+    "title": "আমাদের সম্পর্কে",
+    "description": "এটি আমাদের সম্পর্কে পৃষ্ঠা।"
+  },
+  "dashboard": {
+    "title": "ড্যাশবোর্ড",
+    "description": "আপনার ড্যাশবোর্ডে স্বাগতম।"
+  },
+  "notifications": {
+    "title": "বিজ্ঞপ্তি",
+    "description": "এটি বিজ্ঞপ্তি পৃষ্ঠা।"
+  },
+  "projects": {
+    "title": "প্রকল্প",
+    "description": "এটি প্রকল্প পৃষ্ঠা।"
+  }
+}

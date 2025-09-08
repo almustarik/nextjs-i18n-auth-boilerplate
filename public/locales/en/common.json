@@ -1,0 +1,47 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "dashboard": "Dashboard"
+  },
+  "actions": {
+    "signIn": "Sign In"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signInDescription": "Choose your preferred sign-in method",
+    "signInWithGoogle": "Continue with Google",
+    "signInWithGitHub": "Continue with GitHub",
+    "signInWithFacebook": "Continue with Facebook",
+    "oauthNotConfigured": "OAuth providers not configured. Use demo login for testing."
+  },
+  "settings": {
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "title": "Settings",
+    "description": "This is the settings page."
+  },
+  "home": {
+    "title": "Welcome to the Homepage",
+    "description": "This is a simplified homepage for your boilerplate."
+  },
+  "about": {
+    "title": "About Us",
+    "description": "This is the about page."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Welcome to your dashboard."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "This is the notifications page."
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "This is the projects page."
+  }
+}
