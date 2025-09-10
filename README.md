@@ -4,39 +4,40 @@ A robust and modern Next.js 14 boilerplate designed for rapid development of sca
 
 ## Table of Contents
 
--   [Features](#features)
--   [Prerequisites](#prerequisites)
--   [Getting Started](#getting-started)
-    -   [Installation](#installation)
-    -   [Environment Variables](#environment-variables)
-    -   [Running the Project](#running-the-project)
--   [Next.js Internationalization (`next-intl`) Explanation](#nextjs-internationalization-next-intl-explanation)
-    -   [1. Message Loading (`i18n/request.ts`)](#1-message-loading-i18nrequestts)
-    -   [2. Routing (`i18n/routing.ts`, `hooks/useI18nRouting.ts`)](#2-routing-i18nroutingts-hooksusei18nroutingts)
-    -   [3. Using Translations in Components (`useTranslations` hook)](#3-using-translations-in-components-usetranslations-hook)
--   [NextAuth.js Integration](#nextauthjs-integration)
--   [Project Structure](#project-structure)
--   [Contributing](#contributing)
--   [License](#license)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Environment Variables](#environment-variables)
+  - [Running the Project](#running-the-project)
+- [Next.js Internationalization (`next-intl`) Explanation](#nextjs-internationalization-next-intl-explanation)
+  - [1. Message Loading (`i18n/request.ts`)](#1-message-loading-i18nrequestts)
+  - [2. Routing (`i18n/routing.ts`, `hooks/useI18nRouting.ts`)](#2-routing-i18nroutingts-hooksusei18nroutingts)
+  - [3. Using Translations in Components (`useTranslations` hook)](#3-using-translations-in-components-usetranslations-hook)
+- [NextAuth.js Integration](#nextauthjs-integration)
+- [Query Parameter Management & API Integration](#query-parameter-management--api-integration)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
--   **Next.js 14 App Router:** Built with the latest Next.js App Router, leveraging Server Components and optimized rendering for superior performance and a streamlined development experience.
--   **Internationalization (i18n):** Comprehensive multi-language support powered by `next-intl`, enabling seamless localization of content and URL routing for a global audience.
--   **NextAuth.js:** Secure and flexible authentication system integrated with NextAuth.js, supporting popular OAuth providers like Google, GitHub, and Facebook.
--   **Modern UI with Tailwind CSS:** A clean, responsive, and highly customizable user interface built with Tailwind CSS, ensuring a consistent and visually appealing design across devices.
--   **Global Footer:** A consistent and modern footer that appears on every page of the application, providing essential information and branding.
--   **Consistent Content Container:** All main content areas across the website adhere to a defined maximum width and horizontal padding, ensuring a visually balanced and readable layout.
--   **Modern Font:** Utilizes a carefully selected modern sans-serif font (Inter) for enhanced readability and a contemporary aesthetic.
--   **Modular Structure:** The codebase is organized into logical modules (components, hooks, lib, store, types) promoting maintainability, scalability, and reusability.
+- **Next.js 14 App Router:** Built with the latest Next.js App Router, leveraging Server Components and optimized rendering for superior performance and a streamlined development experience.
+- **Internationalization (i18n):** Comprehensive multi-language support powered by `next-intl`, enabling seamless localization of content and URL routing for a global audience.
+- **NextAuth.js:** Secure and flexible authentication system integrated with NextAuth.js, supporting popular OAuth providers like Google, GitHub, and Facebook.
+- **Modern UI with Tailwind CSS:** A clean, responsive, and highly customizable user interface built with Tailwind CSS, ensuring a consistent and visually appealing design across devices.
+- **Global Footer:** A consistent and modern footer that appears on every page of the application, providing essential information and branding.
+- **Consistent Content Container:** All main content areas across the website adhere to a defined maximum width and horizontal padding, ensuring a visually balanced and readable layout.
+- **Modern Font:** Utilizes a carefully selected modern sans-serif font (Inter) for enhanced readability and a contemporary aesthetic.
+- **Modular Structure:** The codebase is organized into logical modules (components, hooks, lib, store, types) promoting maintainability, scalability, and reusability.
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
--   [Node.js](https://nodejs.org/): v18.x or higher
--   [pnpm](https://pnpm.io/): (Recommended) or npm/yarn
--   [Git](https://git-scm.com/): For cloning the repository
+- [Node.js](https://nodejs.org/): v18.x or higher
+- [pnpm](https://pnpm.io/): (Recommended) or npm/yarn
+- [Git](https://git-scm.com/): For cloning the repository
 
 ## Getting Started
 
@@ -77,6 +78,7 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api
 # Development Configuration
 NODE_ENV=development
 ```
+
 **Important:** Replace placeholder values (`your_actual_...`) with your actual credentials obtained from the respective OAuth provider's developer consoles.
 
 ### Running the Project
@@ -86,6 +88,7 @@ To start the development server:
 ```bash
 pnpm dev # or npm run dev or yarn dev
 ```
+
 Open your browser and navigate to [http://localhost:3000](http://localhost:3000).
 
 ## Next.js Internationalization (`next-intl`) Explanation
@@ -96,92 +99,94 @@ This project leverages `next-intl` for comprehensive internationalization, enabl
 
 The `i18n/request.ts` file is the entry point for loading translation messages based on the requested locale.
 
--   It uses `getRequestConfig` from `next-intl/server` to dynamically import the `common.json` file for the active locale from the `public/locales` directory.
--   This setup ensures that only the necessary translation messages for the current locale are loaded on the server, optimizing performance by reducing the bundle size sent to the client.
--   All translation keys are expected to reside within the `common.json` file for each locale (e.g., `public/locales/en/common.json`, `public/locales/fr/common.json`).
+- It uses `getRequestConfig` from `next-intl/server` to dynamically import the `common.json` file for the active locale from the `public/locales` directory.
+- This setup ensures that only the necessary translation messages for the current locale are loaded on the server, optimizing performance by reducing the bundle size sent to the client.
+- All translation keys are expected to reside within the `common.json` file for each locale (e.g., `public/locales/en/common.json`, `public/locales/fr/common.json`).
 
 ```typescript
 // i18n/request.ts
-import { getRequestConfig } from "next-intl/server"
-import { hasLocale } from "next-intl"
-import { routing } from "./routing"
+import { getRequestConfig } from 'next-intl/server';
+import { hasLocale } from 'next-intl';
+import { routing } from './routing';
 
 export default getRequestConfig(async ({ requestLocale }) => {
-  const requested = await requestLocale
-  const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale
+  const requested = await requestLocale;
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
 
   return {
     locale,
     messages: (await import(`../public/locales/${locale}/common.json`)).default,
-  }
-})
+  };
+});
 ```
 
 ### 2. Routing (`i18n/routing.ts`, `hooks/useI18nRouting.ts`)
 
 Localized routing is managed through a combination of `i18n/routing.ts` and a custom `useI18nRouting` hook.
 
--   **`i18n/routing.ts`:** This file defines the core routing configuration for `next-intl`.
-    -   `locales`: An array specifying all supported language locales (e.g., "en", "fr", "es", "bn"). These must correspond to your translation file structure.
-    -   `defaultLocale`: The fallback locale used when no specific locale is matched in the URL or detected from user preferences.
-    -   It uses `defineRouting` to encapsulate this configuration.
+- **`i18n/routing.ts`:** This file defines the core routing configuration for `next-intl`.
+  - `locales`: An array specifying all supported language locales (e.g., "en", "fr", "es", "bn"). These must correspond to your translation file structure.
+  - `defaultLocale`: The fallback locale used when no specific locale is matched in the URL or detected from user preferences.
+  - It uses `defineRouting` to encapsulate this configuration.
 
-    ```typescript
-    // i18n/routing.ts
-    import { defineRouting } from "next-intl/routing"
+  ```typescript
+  // i18n/routing.ts
+  import { defineRouting } from 'next-intl/routing';
 
-    export const routing = defineRouting({
-      locales: ["en", "fr", "es", "bn"],
-      defaultLocale: "en",
-    })
-    ```
+  export const routing = defineRouting({
+    locales: ['en', 'fr', 'es', 'bn'],
+    defaultLocale: 'en',
+  });
+  ```
 
--   **`hooks/useI18nRouting.ts`:** This custom React hook provides a convenient way to handle localized navigation within client components.
-    -   It uses `useLocale` from `next-intl` to get the current active locale.
-    -   It wraps Next.js's `useRouter` to automatically prepend the current locale to paths when using `push` or `replace` methods. This ensures all internal links respect the active language without manual path construction in components.
+- **`hooks/useI18nRouting.ts`:** This custom React hook provides a convenient way to handle localized navigation within client components.
+  - It uses `useLocale` from `next-intl` to get the current active locale.
+  - It wraps Next.js's `useRouter` to automatically prepend the current locale to paths when using `push` or `replace` methods. This ensures all internal links respect the active language without manual path construction in components.
 
-    ```typescript
-    // hooks/useI18nRouting.ts
-    "use client"
+  ```typescript
+  // hooks/useI18nRouting.ts
+  'use client';
 
-    import { useLocale } from "next-intl"
-    import { useRouter } from "next/navigation" // Note: This is Next.js's useRouter, not next-intl's
-    import { useCallback } from "react"
+  import { useLocale } from 'next-intl';
+  import { useRouter } from 'next/navigation'; // Note: This is Next.js's useRouter, not next-intl's
+  import { useCallback } from 'react';
 
-    export function useI18nRouting() {
-      const locale = useLocale()
-      const router = useRouter()
+  export function useI18nRouting() {
+    const locale = useLocale();
+    const router = useRouter();
 
-      const push = useCallback(
-        (href: string) => {
-          const localizedHref = href.startsWith("/") ? `/${locale}${href}` : href
-          router.push(localizedHref)
-        },
-        [locale, router],
-      )
+    const push = useCallback(
+      (href: string) => {
+        const localizedHref = href.startsWith('/') ? `/${locale}${href}` : href;
+        router.push(localizedHref);
+      },
+      [locale, router]
+    );
 
-      const replace = useCallback(
-        (href: string) => {
-          const localizedHref = href.startsWith("/") ? `/${locale}${href}` : href
-          router.replace(localizedHref)
-        },
-        [locale, router],
-      )
+    const replace = useCallback(
+      (href: string) => {
+        const localizedHref = href.startsWith('/') ? `/${locale}${href}` : href;
+        router.replace(localizedHref);
+      },
+      [locale, router]
+    );
 
-      return {
-        push,
-        replace,
-        locale,
-      }
-    }
-    ```
+    return {
+      push,
+      replace,
+      locale,
+    };
+  }
+  ```
 
 ### 3. Using Translations in Components (`useTranslations` hook)
 
 Translations are accessed in React components using the `useTranslations` hook from `next-intl`.
 
--   When `useTranslations()` is called without a namespace (as shown in the `Navbar.tsx` example below), you must provide the full path to the translation key (e.g., `navigation.home`, `actions.signIn`). This approach ensures clarity and avoids conflicts when multiple translation domains are present in `common.json`.
--   Alternatively, you can specify a namespace (e.g., `useTranslations("auth")`) to use shorter keys relative to that namespace (e.g., `t("signIn")`). This project primarily uses the no-namespace approach for simplicity with a single `common.json` file.
+- When `useTranslations()` is called without a namespace (as shown in the `Navbar.tsx` example below), you must provide the full path to the translation key (e.g., `navigation.home`, `actions.signIn`). This approach ensures clarity and avoids conflicts when multiple translation domains are present in `common.json`.
+- Alternatively, you can specify a namespace (e.g., `useTranslations("auth")`) to use shorter keys relative to that namespace (e.g., `t("signIn")`). This project primarily uses the no-namespace approach for simplicity with a single `common.json` file.
 
 ```typescript
 // components/nav/Navbar.tsx (Example)
@@ -206,12 +211,20 @@ export function Navbar() {
 
 This boilerplate integrates NextAuth.js for robust authentication.
 
--   **Configuration (`lib/auth.ts`):** The `authOptions` in `lib/auth.ts` define the authentication providers (Google, GitHub, Facebook) and callbacks for JWT and session management.
--   **Providers:** OAuth providers are conditionally included based on the presence of their respective environment variables (`GOOGLE_CLIENT_ID`, `GITHUB_ID`, `FACEBOOK_CLIENT_ID`, etc.).
--   **Callbacks:**
-    -   `jwt` callback: Modifies the JWT token (e.g., adds user roles).
-    -   `session` callback: Extends the session object with custom user data.
-    -   `signIn` callback (commented out example): Demonstrates how to implement custom backend token verification before allowing a user to sign in. This is a powerful feature for implementing custom authorization logic.
+- **Configuration (`lib/auth.ts`):** The `authOptions` in `lib/auth.ts` define the authentication providers (Google, GitHub, Facebook) and callbacks for JWT and session management.
+- **Providers:** OAuth providers are conditionally included based on the presence of their respective environment variables (`GOOGLE_CLIENT_ID`, `GITHUB_ID`, `FACEBOOK_CLIENT_ID`, etc.).
+- **Callbacks:**
+  - `jwt` callback: Modifies the JWT token (e.g., adds user roles).
+  - `session` callback: Extends the session object with custom user data.
+  - `signIn` callback (commented out example): Demonstrates how to implement custom backend token verification before allowing a user to sign in. This is a powerful feature for implementing custom authorization logic.
+
+## Query Parameter Management & API Integration
+
+This boilerplate includes robust handling of URL query parameters, ensuring a consistent and persistent user experience across the application and seamless integration with API calls. Key features include:
+
+- **Matching API Query Parameters to URL:** The application dynamically matches and synchronizes API request parameters with the current URL's query parameters. This ensures that the UI state (e.g., pagination, filters) is always reflected in the URL, making it shareable and bookmarkable.
+- **Consistent Query Parameters with APIs:** A unified approach is implemented to maintain consistency between the frontend's URL query parameters and the backend API requests. This reduces discrepancies and simplifies data fetching and state management.
+- **Persistent Query Parameters on Language Change:** Query parameters are intelligently preserved when the user switches languages. This means that if a user is on a filtered or paginated page and changes the language, their current view state (filters, page number, etc.) is maintained, providing a smooth and uninterrupted browsing experience.
 
 ## Project Structure
 
