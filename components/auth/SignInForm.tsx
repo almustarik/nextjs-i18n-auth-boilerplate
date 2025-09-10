@@ -1,15 +1,22 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Github } from "lucide-react"
-import { useTranslations, useLocale } from "next-intl"
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Github } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface SignInFormProps {
-  providers: Record<string, any> | null
+  providers: Record<string, any> | null;
+  callbackUrl?: string; // Add callbackUrl prop
 }
 
 const GoogleIcon = () => (
@@ -31,7 +38,7 @@ const GoogleIcon = () => (
       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
     />
   </svg>
-)
+);
 
 const FacebookIcon = () => (
   <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
@@ -42,30 +49,33 @@ const FacebookIcon = () => (
   </svg>
 );
 
-export function SignInForm({ providers }: SignInFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const t = useTranslations("auth")
-  const locale = useLocale()
+export function SignInForm({ providers, callbackUrl }: SignInFormProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const t = useTranslations('auth');
+  const locale = useLocale();
 
   const handleProviderSignIn = async (providerId: string) => {
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await signIn(providerId, { callbackUrl: `/${locale}/dashboard` })
+      await signIn(providerId, {
+        callbackUrl: callbackUrl || `/${locale}/dashboard`,
+      });
     } catch (error) {
-      console.error("Provider sign in error:", error)
+      console.error('Provider sign in error:', error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const hasOAuthProviders = providers && (providers.google || providers.github || providers.facebook)
+  const hasOAuthProviders =
+    providers && (providers.google || providers.github || providers.facebook);
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader className="text-center">
-        <CardTitle>{t("signIn")}</CardTitle>
-        <CardDescription>{t("signInDescription")}</CardDescription>
+        <CardTitle>{t('signIn')}</CardTitle>
+        <CardDescription>{t('signInDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {hasOAuthProviders ? (
@@ -73,41 +83,43 @@ export function SignInForm({ providers }: SignInFormProps) {
             {providers?.google && (
               <Button
                 variant="outline"
-                className="w-full bg-transparent hover:bg-accent"
-                onClick={() => handleProviderSignIn("google")}
+                className="hover:bg-accent w-full bg-transparent"
+                onClick={() => handleProviderSignIn('google')}
                 disabled={isLoading}
               >
                 <GoogleIcon />
-                {t("signInWithGoogle")}
+                {t('signInWithGoogle')}
               </Button>
             )}
             {providers?.github && (
               <Button
                 variant="outline"
-                className="w-full bg-transparent hover:bg-accent"
-                onClick={() => handleProviderSignIn("github")}
+                className="hover:bg-accent w-full bg-transparent"
+                onClick={() => handleProviderSignIn('github')}
                 disabled={isLoading}
               >
                 <Github className="mr-2 h-4 w-4" />
-                {t("signInWithGitHub")}
+                {t('signInWithGitHub')}
               </Button>
             )}
             {providers?.facebook && (
               <Button
                 variant="outline"
-                className="w-full bg-transparent hover:bg-accent"
-                onClick={() => handleProviderSignIn("facebook")}
+                className="hover:bg-accent w-full bg-transparent"
+                onClick={() => handleProviderSignIn('facebook')}
                 disabled={isLoading}
               >
                 <FacebookIcon />
-                {t("signInWithFacebook")}
+                {t('signInWithFacebook')}
               </Button>
             )}
           </div>
         ) : (
-          <div className="text-center text-sm text-muted-foreground">{t("oauthNotConfigured")}</div>
+          <div className="text-muted-foreground text-center text-sm">
+            {t('oauthNotConfigured')}
+          </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,41 +1,60 @@
-import { SignInForm } from "@/components/auth/SignInForm"
-import { Navbar } from "@/components/nav/Navbar"
-import { getProviders } from "next-auth/react"
-import { getServerAuthSession } from "@/lib/auth"
-import { redirect } from "next/navigation"
-import { setRequestLocale } from "next-intl/server"
+import { SignInForm } from '@/components/auth/SignInForm';
+import { Navbar } from '@/components/nav/Navbar';
+import { getServerAuthSession } from '@/lib/auth';
+import { getProviders } from 'next-auth/react';
+import { setRequestLocale } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 
-export default async function SignInPage({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params
+type SignInPageProps = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ callbackUrl?: string }>;
+};
 
-  setRequestLocale(locale)
+export default async function SignInPage({
+  params,
+  searchParams,
+}: SignInPageProps) {
+  const { locale } = await params;
+  const { callbackUrl } = await searchParams;
 
-  const session = await getServerAuthSession()
+  // Make sure locale is set as early as possible
+  setRequestLocale(locale);
+
+  const session = await getServerAuthSession();
 
   if (session) {
-    redirect(`/${locale}/dashboard`)
+    redirect(callbackUrl || `/${locale}/dashboard`);
   }
 
-  const providers = await getProviders()
+  const providers = await getProviders();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <Navbar />
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
         <div className="container py-12">
-          <div className="w-full max-w-md mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold tracking-tight text-primary">Welcome Back</h1>
-            <p className="mt-2 text-muted-foreground">Sign in to continue to your account</p>
+          <div className="mx-auto w-full max-w-md">
+            <div className="mb-8 text-center">
+              <h1 className="text-primary text-3xl font-bold tracking-tight">
+                Welcome Back
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Sign in to continue to your account
+              </p>
+            </div>
+            <SignInForm providers={providers} callbackUrl={callbackUrl} />
           </div>
-          <SignInForm providers={providers} />
         </div>
       </div>
     </div>
-    </div>
-  )
+  );
 }
 
 export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "fr" }, { locale: "es" }, { locale: "bn" }]
+  return [
+    { locale: 'en' },
+    { locale: 'fr' },
+    { locale: 'es' },
+    { locale: 'bn' },
+  ];
 }
