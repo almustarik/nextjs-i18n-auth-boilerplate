@@ -7,12 +7,8 @@ export default [
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    plugins: {
-      '@next/next': nextPlugin,
-    },
-    rules: {
-      ...nextPlugin.configs['core-web-vitals'].rules,
-    },
+    plugins: { '@next/next': nextPlugin },
+    rules: { ...nextPlugin.configs['core-web-vitals'].rules },
   },
   {
     rules: {
@@ -25,7 +21,7 @@ export default [
           caughtErrorsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'off', // relax
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
 ];
