@@ -1,24 +1,20 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useTodos } from '@/hooks/query/useTodos';
-import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
   PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Loader2 } from 'lucide-react';
-import { Toaster } from '@/components/ui/toaster';
-import { useAtom } from 'jotai';
+import { useTodos } from '@/hooks/query/useTodos';
 import { setPageAtom } from '@/store/useUiStore';
+import { useAtom } from 'jotai';
+import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 

@@ -1,31 +1,31 @@
 'use client';
 
 import { AppShell } from '@/components/layout/AppShell';
-import { useTranslations } from 'next-intl';
-import {
-  useTodos,
-  useAddTodo,
-  useUpdateTodo,
-  useDeleteTodo,
-} from '@/hooks/query/useTodos';
-import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
   PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Loader2, Plus, Trash2, Edit } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
-import { useAtom } from 'jotai';
+import {
+  useAddTodo,
+  useDeleteTodo,
+  useTodos,
+  useUpdateTodo,
+} from '@/hooks/query/useTodos';
 import { setPageAtom } from '@/store/useUiStore';
+import { useAtom } from 'jotai';
+import { Edit, Loader2, Plus, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 const generatePaginationPages = (currentPage: number, totalPages: number) => {
   const pages: (number | string)[] = [];
