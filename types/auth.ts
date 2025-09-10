@@ -1,18 +1,20 @@
-export type { SessionUser } from "./entities"
+import { SessionUser } from './entities';
+
+export type { SessionUser } from './entities';
 
 export interface AuthSession {
-  user: SessionUser
-  expires: string
+  user: SessionUser;
+  expires: string;
 }
 
 export interface SignInCredentials {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface DemoUser {
-  id: string
-  email: string
-  name: string
-  role: "user" | "admin"
+  id: string;
+  email: string;
+  name: string;
+  role: 'user' | 'admin';
 }
