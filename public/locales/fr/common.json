@@ -5,7 +5,8 @@
     "dashboard": "Tableau de bord"
   },
   "actions": {
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter"
   },
   "auth": {
     "signIn": "Se connecter",

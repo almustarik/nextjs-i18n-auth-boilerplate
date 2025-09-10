@@ -5,7 +5,8 @@
     "dashboard": "Panel"
   },
   "actions": {
-    "signIn": "Iniciar sesión"
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión"
   },
   "auth": {
     "signIn": "Iniciar sesión",
