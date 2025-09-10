@@ -9,10 +9,24 @@ import { useSearchParams } from 'next/navigation';
 
 export const TODO_QUERY_KEY = 'todos';
 
+// Define the return type of useTodos
+interface UseTodosResult {
+  data: Todo[] | undefined;
+  totalCount: number;
+  page: number;
+  limit: number;
+  pageCount: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  isLoading: boolean;
+  isFetching: boolean;
+  // Add other properties from queryResult if needed
+}
+
 export const useTodos = (params?: {
   userId?: number;
   filters?: Record<string, any>;
-}) => {
+}): UseTodosResult => {
   const searchParams = useSearchParams();
   const _pageParam = searchParams.get('_page'); // Changed to _page
   const initialPage = _pageParam ? parseInt(_pageParam, 10) : 1; // Changed to _pageParam
@@ -21,7 +35,7 @@ export const useTodos = (params?: {
   const _limitParam = searchParams.get('_limit'); // Changed to _limit
   const limit = _limitParam ? parseInt(_limitParam, 10) : defaultLimit; // Changed to _limitParam
 
-  const { data, ...queryResult } = usePaginatedQuery<Todo>(
+  const { data, ...queryResult } = usePaginatedQuery<Todo[]>(
     [TODO_QUERY_KEY, 'list', params],
     initialPage,
     limit,

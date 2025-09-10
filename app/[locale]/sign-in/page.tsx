@@ -1,5 +1,4 @@
 import { SignInForm } from '@/components/auth/SignInForm';
-import { Navbar } from '@/components/nav/Navbar';
 import { getServerAuthSession } from '@/lib/auth';
 import { getProviders } from 'next-auth/react';
 import { setRequestLocale } from 'next-intl/server';
@@ -30,7 +29,6 @@ export default async function SignInPage({
 
   return (
     <div className="bg-background min-h-screen">
-      <Navbar />
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center">
         <div className="container py-12">
           <div className="mx-auto w-full max-w-md">

@@ -8,7 +8,7 @@ import {
   useUpdateTodo,
   useDeleteTodo,
 } from '@/hooks/query/useTodos';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -69,6 +69,18 @@ export default function TodosPage() {
     title: string;
   } | null>(null);
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [, setPageAtomValue] = useAtom(setPageAtom);
+
+  const currentFilters: Record<string, string> = {};
+  searchParams.forEach((value, key) => {
+    if (key !== '_page' && key !== '_limit') {
+      // Exclude _page and _limit
+      currentFilters[key] = value;
+    }
+  });
+
   const {
     data: todos,
     page,
@@ -77,14 +89,28 @@ export default function TodosPage() {
     hasPreviousPage,
     isLoading,
     isFetching,
-  } = useTodos();
+    limit, // Destructure limit here
+  } = useTodos({ filters: currentFilters });
+
+  useEffect(() => {
+    const pageParam = searchParams.get('_page');
+    const limitParam = searchParams.get('_limit'); // Get _limit from URL
+    if (!pageParam || !limitParam) {
+      // Check if either is missing
+      const params = new URLSearchParams(searchParams.toString());
+      if (!pageParam) {
+        params.set('_page', '1');
+      }
+      if (!limitParam) {
+        params.set('_limit', limit.toString()); // Set _limit using the 'limit' from useTodos
+      }
+      router.replace(`?${params.toString()}`);
+    }
+  }, [searchParams, router, limit]); // Add 'limit' to dependency array
+
   const addTodoMutation = useAddTodo();
   const updateTodoMutation = useUpdateTodo();
   const deleteTodoMutation = useDeleteTodo();
-
-  const [, setPageAtomValue] = useAtom(setPageAtom);
-  const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handleAddTodo = () => {
     if (newTodoTitle.trim()) {
@@ -122,28 +148,37 @@ export default function TodosPage() {
     }
   };
 
-  const updateUrlPage = (newPage: number) => {
+  const updateUrlParams = (newParams: Record<string, string | number>) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', newPage.toString());
+    // Always include the current limit in the URL
+    params.set('_limit', limit.toString());
+
+    for (const key in newParams) {
+      if (Object.prototype.hasOwnProperty.call(newParams, key)) {
+        params.set(key, newParams[key].toString());
+      }
+    }
     router.push(`?${params.toString()}`);
-    setPageAtomValue(newPage);
+    if (newParams._page) {
+      setPageAtomValue(Number(newParams._page));
+    }
   };
 
   const goToNextPage = () => {
     if (hasNextPage) {
-      updateUrlPage(page + 1);
+      updateUrlParams({ _page: page + 1, _limit: limit });
     }
   };
 
   const goToPreviousPage = () => {
     if (hasPreviousPage) {
-      updateUrlPage(page - 1);
+      updateUrlParams({ _page: page - 1, _limit: limit });
     }
   };
 
   const goToPage = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= pageCount) {
-      updateUrlPage(pageNumber);
+      updateUrlParams({ _page: pageNumber, _limit: limit });
     }
   };
 
@@ -176,9 +211,9 @@ export default function TodosPage() {
             />
             <Button
               onClick={handleAddTodo}
-              disabled={addTodoMutation.isLoading}
+              disabled={addTodoMutation.isPending}
             >
-              {addTodoMutation.isLoading ? (
+              {addTodoMutation.isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <Plus className="mr-2 h-4 w-4" />
@@ -211,10 +246,10 @@ export default function TodosPage() {
                       />
                       {editingTodo?.id === todo.id ? (
                         <Input
-                          value={editingTodo.title}
+                          value={editingTodo!.title}
                           onChange={(e) =>
                             setEditingTodo({
-                              ...editingTodo,
+                              ...editingTodo!,
                               title: e.target.value,
                             })
                           }
