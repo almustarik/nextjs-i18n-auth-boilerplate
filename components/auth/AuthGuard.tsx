@@ -1,30 +1,30 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
-import { useEffect } from "react"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface AuthGuardProps {
-  children: React.ReactNode
-  fallback?: React.ReactNode
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
 }
 
 export function AuthGuard({ children, fallback }: AuthGuardProps) {
-  const { data: session, status } = useSession()
-  const router = useRouter()
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return
+    if (status === 'loading') return;
 
     if (!session) {
-      router.push("/sign-in")
+      router.push('/sign-in');
     }
-  }, [session, status, router])
+  }, [session, status, router]);
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       fallback || (
         <div className="flex h-screen items-center justify-center">
@@ -34,12 +34,12 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
           </div>
         </div>
       )
-    )
+    );
   }
 
   if (!session) {
-    return null
+    return null;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
