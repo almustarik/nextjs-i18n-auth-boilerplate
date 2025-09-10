@@ -1,4 +1,0 @@
-echo "Running commit-msg hook..."
-echo "Commit message file: $1"
-npx commitlint --edit "$1"
-echo "Commitlint finished."
