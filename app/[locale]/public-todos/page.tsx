@@ -20,6 +20,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { useAtom } from 'jotai';
 import { setPageAtom } from '@/store/useUiStore';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 const generatePaginationPages = (currentPage: number, totalPages: number) => {
   const pages: (number | string)[] = [];
@@ -58,6 +59,18 @@ const generatePaginationPages = (currentPage: number, totalPages: number) => {
 export default function PublicTodosPage() {
   const t = useTranslations('publicTodos');
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [, setPageAtomValue] = useAtom(setPageAtom);
+
+  const currentFilters: Record<string, string> = {};
+  searchParams.forEach((value, key) => {
+    if (key !== '_page' && key !== '_limit') {
+      // Exclude _page and _limit
+      currentFilters[key] = value;
+    }
+  });
+
   const {
     data: todos,
     page,
@@ -66,34 +79,57 @@ export default function PublicTodosPage() {
     hasPreviousPage,
     isLoading,
     isFetching,
-  } = useTodos();
+    limit, // Destructure limit here
+  } = useTodos({ filters: currentFilters });
 
-  const [, setPageAtomValue] = useAtom(setPageAtom);
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  useEffect(() => {
+    const pageParam = searchParams.get('_page');
+    const limitParam = searchParams.get('_limit'); // Get _limit from URL
+    if (!pageParam || !limitParam) {
+      // Check if either is missing
+      const params = new URLSearchParams(searchParams.toString());
+      if (!pageParam) {
+        params.set('_page', '1');
+      }
+      if (!limitParam) {
+        params.set('_limit', limit.toString()); // Set _limit using the 'limit' from useTodos
+      }
+      router.replace(`?${params.toString()}`);
+    }
+  }, [searchParams, router, limit]); // Add 'limit' to dependency array
 
-  const updateUrlPage = (newPage: number) => {
+  const updateUrlParams = (newParams: Record<string, string | number>) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set('page', newPage.toString());
+    // Always include the current limit in the URL
+    params.set('_limit', limit.toString());
+
+    for (const key in newParams) {
+      if (Object.prototype.hasOwnProperty.call(newParams, key)) {
+        params.set(key, newParams[key].toString());
+      }
+    }
     router.push(`?${params.toString()}`);
-    setPageAtomValue(newPage);
+    if (newParams._page) {
+      // Changed to _page
+      setPageAtomValue(Number(newParams._page)); // Changed to _page
+    }
   };
 
   const goToNextPage = () => {
     if (hasNextPage) {
-      updateUrlPage(page + 1);
+      updateUrlParams({ _page: page + 1, _limit: limit }); // Changed to _page
     }
   };
 
   const goToPreviousPage = () => {
     if (hasPreviousPage) {
-      updateUrlPage(page - 1);
+      updateUrlParams({ _page: page - 1, _limit: limit }); // Changed to _page
     }
   };
 
   const goToPage = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= pageCount) {
-      updateUrlPage(pageNumber);
+      updateUrlParams({ _page: pageNumber, _limit: limit }); // Changed to _page
     }
   };
 

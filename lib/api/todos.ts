@@ -8,12 +8,26 @@ const TODO_API_URL = 'https://jsonplaceholder.typicode.com/todos';
 export const getTodos = async ({
   page = 1,
   limit = 10,
-}: PaginationParams): Promise<{ data: Todo[]; totalCount: number }> => {
+  filters,
+}: PaginationParams & { filters?: Record<string, any> }): Promise<{
+  data: Todo[];
+  totalCount: number;
+}> => {
+  const params: Record<string, any> = {
+    _page: page,
+    _limit: limit,
+  };
+
+  if (filters) {
+    for (const key in filters) {
+      if (Object.prototype.hasOwnProperty.call(filters, key)) {
+        params[key] = filters[key];
+      }
+    }
+  }
+
   const response = await apiClient.get<Todo[]>(TODO_API_URL, {
-    params: {
-      _page: page,
-      _limit: limit,
-    },
+    params,
   });
   const totalCount = Number(response.headers['x-total-count'] || 0);
   return { data: response.data, totalCount };

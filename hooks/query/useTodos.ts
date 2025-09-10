@@ -4,40 +4,40 @@ import { getTodos, createTodo, updateTodo, deleteTodo } from '@/lib/api/todos';
 import type { Todo } from '@/types/entities';
 import { useToast } from '@/components/ui/use-toast';
 import { useAtom } from 'jotai';
-import { currentPageAtom, pageSizeAtom, setPageAtom } from '@/store/useUiStore';
+import { pageSizeAtom } from '@/store/useUiStore';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
 
 export const TODO_QUERY_KEY = 'todos';
 
-export const useTodos = (params?: { userId?: number }) => {
-  const [page] = useAtom(currentPageAtom);
-  const [limit] = useAtom(pageSizeAtom);
-  const [, setPage] = useAtom(setPageAtom);
+export const useTodos = (params?: {
+  userId?: number;
+  filters?: Record<string, any>;
+}) => {
   const searchParams = useSearchParams();
+  const _pageParam = searchParams.get('_page'); // Changed to _page
+  const initialPage = _pageParam ? parseInt(_pageParam, 10) : 1; // Changed to _pageParam
 
-  useEffect(() => {
-    const pageParam = searchParams.get('page');
-    const initialPage = pageParam ? parseInt(pageParam, 10) : 1;
-    if (initialPage !== page) {
-      setPage(initialPage);
-    }
-  }, [searchParams, setPage, page]);
+  const defaultLimit = useAtom(pageSizeAtom)[0]; // Get default limit from atom
+  const _limitParam = searchParams.get('_limit'); // Changed to _limit
+  const limit = _limitParam ? parseInt(_limitParam, 10) : defaultLimit; // Changed to _limitParam
 
   const { data, ...queryResult } = usePaginatedQuery<Todo>(
-    [TODO_QUERY_KEY, 'list', params, page, limit],
-    ({ page: p, limit: l }) => getTodos({ ...params, page: p, limit: l })
+    [TODO_QUERY_KEY, 'list', params],
+    initialPage,
+    limit,
+    ({ page: p, limit: l }) =>
+      getTodos({ ...params, page: p, limit: l, filters: params?.filters })
   );
 
   const totalCount = data?.totalCount ?? 0;
   const pageCount = Math.ceil(totalCount / limit);
-  const hasNextPage = page < pageCount;
-  const hasPreviousPage = page > 1;
+  const hasNextPage = initialPage < pageCount;
+  const hasPreviousPage = initialPage > 1;
 
   return {
     data: data?.data,
     totalCount,
-    page,
+    page: initialPage,
     limit,
     pageCount,
     hasNextPage,
