@@ -1,17 +1,10 @@
+'use client';
+
 import { AppShell } from '@/components/layout/AppShell';
-import { getTranslations } from 'next-intl/server';
-import { setRequestLocale } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 
-export default async function NotificationsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-
-  setRequestLocale(locale);
-
-  const t = await getTranslations('notifications');
+export default function NotificationsPage() {
+  const t = useTranslations('notifications');
 
   return (
     <AppShell>
@@ -25,13 +18,4 @@ export default async function NotificationsPage({
       </div>
     </AppShell>
   );
-}
-
-export function generateStaticParams() {
-  return [
-    { locale: 'en' },
-    { locale: 'fr' },
-    { locale: 'es' },
-    { locale: 'bn' },
-  ];
 }

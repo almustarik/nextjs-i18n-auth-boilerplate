@@ -2,7 +2,8 @@
   "navigation": {
     "home": "হোম",
     "about": "আমাদের সম্পর্কে",
-    "dashboard": "ড্যাশবোর্ড"
+    "dashboard": "ড্যাশবোর্ড",
+    "todos": "Todos"
   },
   "actions": {
     "signIn": "সাইন ইন",

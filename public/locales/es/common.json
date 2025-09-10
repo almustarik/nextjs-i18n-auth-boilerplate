@@ -2,7 +2,8 @@
   "navigation": {
     "home": "Inicio",
     "about": "Acerca de",
-    "dashboard": "Panel"
+    "dashboard": "Panel",
+    "todos": "Todos"
   },
   "actions": {
     "signIn": "Iniciar sesión",

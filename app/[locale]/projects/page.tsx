@@ -1,17 +1,10 @@
+'use client';
+
 import { AppShell } from '@/components/layout/AppShell';
-import { getTranslations } from 'next-intl/server';
-import { setRequestLocale } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 
-export default async function ProjectsPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-
-  setRequestLocale(locale);
-
-  const t = await getTranslations('projects');
+export default function ProjectsPage() {
+  const t = useTranslations('projects');
 
   return (
     <AppShell>
@@ -25,13 +18,4 @@ export default async function ProjectsPage({
       </div>
     </AppShell>
   );
-}
-
-export function generateStaticParams() {
-  return [
-    { locale: 'en' },
-    { locale: 'fr' },
-    { locale: 'es' },
-    { locale: 'bn' },
-  ];
 }

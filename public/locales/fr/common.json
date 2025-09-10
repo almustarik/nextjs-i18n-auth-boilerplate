@@ -2,7 +2,8 @@
   "navigation": {
     "home": "Accueil",
     "about": "À propos",
-    "dashboard": "Tableau de bord"
+    "dashboard": "Tableau de bord",
+    "todos": "Todos"
   },
   "actions": {
     "signIn": "Se connecter",

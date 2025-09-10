@@ -39,3 +39,12 @@ export interface Profile extends BaseEntity {
   timezone: string;
   language: string;
 }
+
+export interface Todo {
+  id: number;
+  userId: number;
+  title: string;
+  completed: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}

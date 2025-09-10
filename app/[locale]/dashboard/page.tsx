@@ -1,17 +1,10 @@
+'use client';
+
 import { AppShell } from '@/components/layout/AppShell';
-import { getTranslations } from 'next-intl/server';
-import { setRequestLocale } from 'next-intl/server';
+import { useTranslations } from 'next-intl';
 
-export default async function DashboardPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-
-  setRequestLocale(locale);
-
-  const t = await getTranslations('dashboard');
+export default function DashboardPage() {
+  const t = useTranslations('dashboard');
 
   return (
     <AppShell>
@@ -25,13 +18,4 @@ export default async function DashboardPage({
       </div>
     </AppShell>
   );
-}
-
-export function generateStaticParams() {
-  return [
-    { locale: 'en' },
-    { locale: 'fr' },
-    { locale: 'es' },
-    { locale: 'bn' },
-  ];
 }

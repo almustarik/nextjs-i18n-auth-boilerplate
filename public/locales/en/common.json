@@ -2,7 +2,9 @@
   "navigation": {
     "home": "Home",
     "about": "About",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "todos": "Todos",
+    "publicTodos": "Public Todos"
   },
   "actions": {
     "signIn": "Sign In",
@@ -44,5 +46,20 @@
   "projects": {
     "title": "Projects",
     "description": "This is the projects page."
+  },
+  "todos": {
+    "title": "Todos",
+    "description": "Manage your daily tasks.",
+    "addTodo": "Add New Todo",
+    "todoPlaceholder": "What needs to be done?",
+    "add": "Add",
+    "yourTodos": "Your Todos",
+    "noTodos": "No todos yet. Add one above!"
+  },
+  "publicTodos": {
+    "title": "Public Todos",
+    "description": "View all public todos.",
+    "yourTodos": "Public Todos",
+    "noTodos": "No public todos available."
   }
 }

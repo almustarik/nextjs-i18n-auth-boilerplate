@@ -9,6 +9,7 @@ import { AppProviders } from '@/components/providers/AppProviders';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
 import { Inter } from 'next/font/google';
+import { Navbar } from '@/components/nav/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -45,7 +46,10 @@ export default async function LocaleLayout({
         suppressHydrationWarning={true}
       >
         <NextIntlClientProvider messages={messages}>
-          <AppProviders>{children}</AppProviders>
+          <AppProviders>
+            <Navbar />
+            {children}
+          </AppProviders>
         </NextIntlClientProvider>
         <footer className="bg-muted/30 text-muted-foreground mt-auto border-t py-4 text-center text-sm">
           <div className="container mx-auto">

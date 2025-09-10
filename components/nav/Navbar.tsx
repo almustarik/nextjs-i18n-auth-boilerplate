@@ -50,6 +50,20 @@ export function Navbar() {
                 {t('navigation.dashboard')}
               </button>
             )}
+            {session && ( // Conditionally render todos link
+              <button
+                onClick={() => push('/dashboard/todos')}
+                className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
+              >
+                {t('navigation.todos')}
+              </button>
+            )}
+            <button
+              onClick={() => push('/public-todos')}
+              className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
+            >
+              {t('navigation.publicTodos')}
+            </button>
           </div>
         </div>
 
