@@ -25,7 +25,7 @@ import { useAtom } from 'jotai';
 import { Edit, Loader2, Plus, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const generatePaginationPages = (currentPage: number, totalPages: number) => {
   const pages: (number | string)[] = [];
@@ -63,6 +63,7 @@ const generatePaginationPages = (currentPage: number, totalPages: number) => {
 
 export default function TodosPage() {
   const t = useTranslations('todos');
+
   const [newTodoTitle, setNewTodoTitle] = useState('');
   const [editingTodo, setEditingTodo] = useState<{
     id: number;
@@ -73,41 +74,65 @@ export default function TodosPage() {
   const router = useRouter();
   const [, setPageAtomValue] = useAtom(setPageAtom);
 
-  const currentFilters: Record<string, string> = {};
-  searchParams.forEach((value, key) => {
-    if (key !== '_page' && key !== '_limit') {
-      // Exclude _page and _limit
-      currentFilters[key] = value;
-    }
-  });
+  // Parse offset/limit with safe defaults
+  const urlOffset = useMemo(() => {
+    const v = Number(searchParams.get('offset'));
+    return Number.isFinite(v) && v >= 0 ? v : 0;
+  }, [searchParams]);
 
+  const urlLimit = useMemo(() => {
+    const v = Number(searchParams.get('limit'));
+    return Number.isFinite(v) && v > 0 ? v : 10;
+  }, [searchParams]);
+
+  // Memoize filters (exclude offset/limit)
+  const currentFilters = useMemo(() => {
+    const obj: Record<string, string> = {};
+    searchParams.forEach((value, key) => {
+      if (key !== 'offset' && key !== 'limit') obj[key] = value;
+    });
+    return obj;
+  }, [searchParams]);
+
+  // Hook uses the same contract as PublicTodosPage
   const {
     data: todos,
-    page,
+    offset,
+    limit,
     pageCount,
     hasNextPage,
     hasPreviousPage,
     isLoading,
     isFetching,
-    limit, // Destructure limit here
   } = useTodos({ filters: currentFilters });
 
-  useEffect(() => {
-    const pageParam = searchParams.get('_page');
-    const limitParam = searchParams.get('_limit'); // Get _limit from URL
-    if (!pageParam || !limitParam) {
-      // Check if either is missing
-      const params = new URLSearchParams(searchParams.toString());
-      if (!pageParam) {
-        params.set('_page', '1');
-      }
-      if (!limitParam) {
-        params.set('_limit', limit.toString()); // Set _limit using the 'limit' from useTodos
-      }
-      router.replace(`?${params.toString()}`);
-    }
-  }, [searchParams, router, limit]); // Add 'limit' to dependency array
+  // Derive current page from effective offset/limit
+  const currentPage = useMemo(() => {
+    const effLimit = Math.max(1, limit || urlLimit);
+    return Math.floor((offset || urlOffset) / effLimit) + 1;
+  }, [offset, urlOffset, limit, urlLimit]);
 
+  // Normalize URL so both offset & limit are present
+  useEffect(() => {
+    const p = new URLSearchParams(searchParams.toString());
+    let changed = false;
+
+    if (!p.get('offset')) {
+      p.set('offset', String(urlOffset));
+      changed = true;
+    }
+    if (!p.get('limit')) {
+      p.set('limit', String(limit || urlLimit));
+      changed = true;
+    }
+
+    if (changed) router.replace(`?${p.toString()}`);
+  }, [searchParams, router, urlOffset, urlLimit, limit]);
+
+  const effectiveLimit = limit || urlLimit;
+  const effectiveOffset = offset || urlOffset;
+
+  // Mutations
   const addTodoMutation = useAddTodo();
   const updateTodoMutation = useUpdateTodo();
   const deleteTodoMutation = useDeleteTodo();
@@ -117,17 +142,14 @@ export default function TodosPage() {
       addTodoMutation.mutate({
         title: newTodoTitle,
         completed: false,
-        userId: 1, // Assuming a default user for now
+        userId: 1,
       });
       setNewTodoTitle('');
     }
   };
 
   const handleToggleComplete = (todo: { id: number; completed: boolean }) => {
-    updateTodoMutation.mutate({
-      id: todo.id,
-      completed: !todo.completed,
-    });
+    updateTodoMutation.mutate({ id: todo.id, completed: !todo.completed });
   };
 
   const handleDeleteTodo = (id: number) => {
@@ -148,41 +170,47 @@ export default function TodosPage() {
     }
   };
 
+  // URL helpers (mirror PublicTodosPage)
   const updateUrlParams = (newParams: Record<string, string | number>) => {
     const params = new URLSearchParams(searchParams.toString());
-    // Always include the current limit in the URL
-    params.set('_limit', limit.toString());
+    params.set('limit', String(effectiveLimit));
 
     for (const key in newParams) {
-      if (Object.prototype.hasOwnProperty.call(newParams, key)) {
-        params.set(key, newParams[key].toString());
-      }
+      params.set(key, String(newParams[key]));
     }
     router.push(`?${params.toString()}`);
-    if (newParams._page) {
-      setPageAtomValue(Number(newParams._page));
+
+    // keep your existing atom behavior if you rely on page elsewhere
+    if (Object.prototype.hasOwnProperty.call(newParams, 'offset')) {
+      const newOffset = Number(newParams.offset);
+      const newPage = Math.floor(newOffset / effectiveLimit) + 1;
+      setPageAtomValue(newPage);
     }
   };
 
   const goToNextPage = () => {
     if (hasNextPage) {
-      updateUrlParams({ _page: page + 1, _limit: limit });
+      updateUrlParams({ offset: effectiveOffset + effectiveLimit });
     }
   };
 
   const goToPreviousPage = () => {
     if (hasPreviousPage) {
-      updateUrlParams({ _page: page - 1, _limit: limit });
+      updateUrlParams({ offset: effectiveOffset - effectiveLimit });
     }
   };
 
   const goToPage = (pageNumber: number) => {
-    if (pageNumber >= 1 && pageNumber <= pageCount) {
-      updateUrlParams({ _page: pageNumber, _limit: limit });
-    }
+    const total = Math.max(1, pageCount || 1);
+    const clamped = Math.min(Math.max(1, pageNumber), total);
+    const newOffset = (clamped - 1) * effectiveLimit;
+    updateUrlParams({ offset: newOffset });
   };
 
-  const paginationPages = generatePaginationPages(page, pageCount);
+  const paginationPages = useMemo(
+    () => generatePaginationPages(currentPage, Math.max(1, pageCount || 1)),
+    [currentPage, pageCount]
+  );
 
   return (
     <AppShell>
@@ -203,10 +231,8 @@ export default function TodosPage() {
               placeholder={t('todoPlaceholder')}
               value={newTodoTitle}
               onChange={(e) => setNewTodoTitle(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter') {
-                  handleAddTodo();
-                }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleAddTodo();
               }}
             />
             <Button
@@ -241,29 +267,31 @@ export default function TodosPage() {
                   >
                     <div className="flex items-center gap-3">
                       <Checkbox
-                        checked={todo.completed}
+                        checked={!!todo.completed}
                         onCheckedChange={() => handleToggleComplete(todo)}
                       />
                       {editingTodo?.id === todo.id ? (
                         <Input
-                          value={editingTodo!.title}
+                          value={editingTodo.title}
                           onChange={(e) =>
                             setEditingTodo({
-                              ...editingTodo!,
+                              ...editingTodo,
                               title: e.target.value,
                             })
                           }
                           onBlur={handleUpdateTodo}
-                          onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
-                              handleUpdateTodo();
-                            }
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleUpdateTodo();
                           }}
                           className="text-lg font-medium"
                         />
                       ) : (
                         <span
-                          className={`text-lg font-medium ${todo.completed ? 'text-muted-foreground line-through' : ''}`}
+                          className={`text-lg font-medium ${
+                            todo.completed
+                              ? 'text-muted-foreground line-through'
+                              : ''
+                          }`}
                         >
                           {todo.title}
                         </span>
@@ -304,27 +332,31 @@ export default function TodosPage() {
               <PaginationItem>
                 <PaginationPrevious
                   onClick={goToPreviousPage}
-                  disabled={page === 1}
+                  disabled={currentPage === 1}
                 />
               </PaginationItem>
-              {paginationPages.map((p, index) => (
-                <PaginationItem key={index}>
+
+              {paginationPages.map((p, i) => (
+                <PaginationItem key={`${p}-${i}`}>
                   {typeof p === 'number' ? (
                     <PaginationLink
                       onClick={() => goToPage(p)}
-                      isActive={page === p}
+                      isActive={currentPage === p}
                     >
                       {p}
                     </PaginationLink>
                   ) : (
-                    <span className="px-4 py-2 text-sm font-medium">{p}</span>
+                    <span className="px-4 py-2 text-sm font-medium select-none">
+                      …
+                    </span>
                   )}
                 </PaginationItem>
               ))}
+
               <PaginationItem>
                 <PaginationNext
                   onClick={goToNextPage}
-                  disabled={page === pageCount}
+                  disabled={currentPage === pageCount}
                 />
               </PaginationItem>
             </PaginationContent>
