@@ -3,7 +3,9 @@
     "home": "Accueil",
     "about": "À propos",
     "dashboard": "Tableau de bord",
-    "todos": "Todos"
+    "todos": "Todos",
+    "publicTodos": "Tâches Publiques",
+    "listings": "Annonces"
   },
   "actions": {
     "signIn": "Se connecter",
@@ -45,5 +47,20 @@
   "projects": {
     "title": "Projets",
     "description": "Ceci est la page des projets."
+  },
+  "todos": {
+    "title": "Tâches",
+    "description": "Gérez vos tâches quotidiennes.",
+    "addTodo": "Ajouter une nouvelle tâche",
+    "todoPlaceholder": "Que faut-il faire?",
+    "add": "Ajouter",
+    "yourTodos": "Vos tâches",
+    "noTodos": "Aucune tâche pour le moment. Ajoutez-en une ci-dessus!"
+  },
+  "publicTodos": {
+    "title": "Tâches Publiques",
+    "description": "Voir toutes les tâches publiques.",
+    "yourTodos": "Tâches Publiques",
+    "noTodos": "Aucune tâche publique disponible."
   }
 }

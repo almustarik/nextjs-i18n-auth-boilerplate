@@ -3,7 +3,9 @@
     "home": "হোম",
     "about": "আমাদের সম্পর্কে",
     "dashboard": "ড্যাশবোর্ড",
-    "todos": "Todos"
+    "todos": "Todos",
+    "publicTodos": "Public Todos",
+    "listings": "তালিকা"
   },
   "actions": {
     "signIn": "সাইন ইন",
@@ -45,5 +47,20 @@
   "projects": {
     "title": "প্রকল্প",
     "description": "এটি প্রকল্প পৃষ্ঠা।"
+  },
+  "todos": {
+    "title": "করণীয়",
+    "description": "আপনার দৈনন্দিন কাজ পরিচালনা করুন।",
+    "addTodo": "নতুন করণীয় যোগ করুন",
+    "todoPlaceholder": "কি করতে হবে?",
+    "add": "যোগ করুন",
+    "yourTodos": "আপনার করণীয়",
+    "noTodos": "এখনও কোন করণীয় নেই। উপরে একটি যোগ করুন!"
+  },
+  "publicTodos": {
+    "title": "সর্বজনীন করণীয়",
+    "description": "সমস্ত সর্বজনীন করণীয় দেখুন।",
+    "yourTodos": "সর্বজনীন করণীয়",
+    "noTodos": "কোন সর্বজনীন করণীয় উপলব্ধ নেই।"
   }
 }

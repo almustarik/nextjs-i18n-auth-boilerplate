@@ -1,5 +1,7 @@
 'use client';
 
+import { Suspense } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
@@ -64,12 +66,20 @@ export function Navbar() {
             >
               {t('navigation.publicTodos')}
             </button>
+            <button
+              onClick={() => push('/listings')}
+              className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
+            >
+              {t('navigation.listings')}
+            </button>
           </div>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="hidden items-center gap-2 sm:flex">
-            <LanguageSwitcher />
+            <Suspense fallback={<Skeleton className="h-8 w-24" />}>
+              <LanguageSwitcher />
+            </Suspense>
             <ThemeToggle />
           </div>
 
