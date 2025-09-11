@@ -24,3 +24,8 @@ export interface PaginationParams {
   offset?: number;
   limit?: number;
 }
+
+export interface ApiResponseData<T> {
+  count: number;
+  data: T[];
+}
