@@ -6,7 +6,7 @@ import type { PaginationParams } from '@/types/common';
 const TODO_API_URL = 'https://jsonplaceholder.typicode.com/todos';
 
 export const getTodos = async ({
-  page = 1,
+  offset = 0,
   limit = 10,
   filters,
 }: PaginationParams & { filters?: Record<string, any> }): Promise<{
@@ -14,7 +14,7 @@ export const getTodos = async ({
   totalCount: number;
 }> => {
   const params: Record<string, any> = {
-    _page: page,
+    _start: offset,
     _limit: limit,
   };
 

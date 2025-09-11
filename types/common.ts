@@ -1,9 +1,8 @@
 export interface Paginated<T> {
   data: T[];
   total: number;
-  page: number;
+  offset: number;
   limit: number;
-  totalPages: number;
 }
 
 export interface ApiResult<T> {
@@ -22,6 +21,6 @@ export interface BaseEntity {
 }
 
 export interface PaginationParams {
-  page?: number;
+  offset?: number;
   limit?: number;
 }

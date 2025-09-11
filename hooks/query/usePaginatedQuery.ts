@@ -3,14 +3,14 @@ import type { PaginationParams } from '@/types/common';
 
 export const usePaginatedQuery = <TData>(
   queryKey: any[],
-  page: number,
+  offset: number,
   limit: number,
   queryFn: (
     params: PaginationParams
   ) => Promise<{ data: TData; totalCount: number }>
 ) => {
   return useQuery<{ data: TData; totalCount: number }, Error>({
-    queryKey: [...queryKey, { page, limit }],
-    queryFn: () => queryFn({ page, limit }),
+    queryKey: [...queryKey, { offset, limit }],
+    queryFn: () => queryFn({ offset, limit }),
   });
 };

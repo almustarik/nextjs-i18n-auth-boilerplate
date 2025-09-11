@@ -3,9 +3,8 @@ import { usePaginatedQuery } from './usePaginatedQuery';
 import { getTodos, createTodo, updateTodo, deleteTodo } from '@/lib/api/todos';
 import type { Todo } from '@/types/entities';
 import { useToast } from '@/components/ui/use-toast';
-import { useAtom } from 'jotai';
-import { pageSizeAtom } from '@/store/useUiStore';
 import { useSearchParams } from 'next/navigation';
+import { DEFAULT_PAGINATION_LIMIT } from '@/lib/constants';
 
 export const TODO_QUERY_KEY = 'todos';
 
@@ -13,14 +12,13 @@ export const TODO_QUERY_KEY = 'todos';
 interface UseTodosResult {
   data: Todo[] | undefined;
   totalCount: number;
-  page: number;
+  offset: number;
   limit: number;
   pageCount: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
   isLoading: boolean;
   isFetching: boolean;
-  // Add other properties from queryResult if needed
 }
 
 export const useTodos = (params?: {
@@ -28,30 +26,31 @@ export const useTodos = (params?: {
   filters?: Record<string, any>;
 }): UseTodosResult => {
   const searchParams = useSearchParams();
-  const _pageParam = searchParams.get('_page'); // Changed to _page
-  const initialPage = _pageParam ? parseInt(_pageParam, 10) : 1; // Changed to _pageParam
+  const offsetParam = searchParams.get('offset');
+  const initialOffset = offsetParam ? parseInt(offsetParam, 10) : 0;
 
-  const defaultLimit = useAtom(pageSizeAtom)[0]; // Get default limit from atom
-  const _limitParam = searchParams.get('_limit'); // Changed to _limit
-  const limit = _limitParam ? parseInt(_limitParam, 10) : defaultLimit; // Changed to _limitParam
+  const limitParam = searchParams.get('limit');
+  const limit = limitParam
+    ? parseInt(limitParam, 10)
+    : DEFAULT_PAGINATION_LIMIT;
 
   const { data, ...queryResult } = usePaginatedQuery<Todo[]>(
     [TODO_QUERY_KEY, 'list', params],
-    initialPage,
+    initialOffset,
     limit,
-    ({ page: p, limit: l }) =>
-      getTodos({ ...params, page: p, limit: l, filters: params?.filters })
+    ({ offset: o, limit: l }) =>
+      getTodos({ ...params, offset: o, limit: l, filters: params?.filters })
   );
 
   const totalCount = data?.totalCount ?? 0;
   const pageCount = Math.ceil(totalCount / limit);
-  const hasNextPage = initialPage < pageCount;
-  const hasPreviousPage = initialPage > 1;
+  const hasNextPage = initialOffset + limit < totalCount;
+  const hasPreviousPage = initialOffset > 0;
 
   return {
     data: data?.data,
     totalCount,
-    page: initialPage,
+    offset: initialOffset,
     limit,
     pageCount,
     hasNextPage,

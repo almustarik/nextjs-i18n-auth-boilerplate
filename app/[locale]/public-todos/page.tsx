@@ -11,8 +11,8 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { useTodos } from '@/hooks/query/useTodos';
-import { setPageAtom } from '@/store/useUiStore';
-import { useAtom } from 'jotai';
+// import { setPageAtom } from '@/store/useUiStore';
+// import { useAtom } from 'jotai';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -57,47 +57,50 @@ export default function PublicTodosPage() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [, setPageAtomValue] = useAtom(setPageAtom);
+  // const [, setPageAtomValue] = useAtom(setPageAtom);
 
   const currentFilters: Record<string, string> = {};
   searchParams.forEach((value, key) => {
-    if (key !== '_page' && key !== '_limit') {
-      // Exclude _page and _limit
+    if (key !== 'offset' && key !== 'limit') {
+      // Exclude offset and limit
       currentFilters[key] = value;
     }
   });
 
   const {
     data: todos,
-    page,
+    offset,
+    limit,
     pageCount,
     hasNextPage,
     hasPreviousPage,
     isLoading,
     isFetching,
-    limit, // Destructure limit here
   } = useTodos({ filters: currentFilters });
 
+  // Derive page from offset and limit for pagination UI
+  const currentPage = Math.floor(offset / limit) + 1;
+
   useEffect(() => {
-    const pageParam = searchParams.get('_page');
-    const limitParam = searchParams.get('_limit'); // Get _limit from URL
-    if (!pageParam || !limitParam) {
+    const offsetParam = searchParams.get('offset');
+    const limitParam = searchParams.get('limit');
+    if (!offsetParam || !limitParam) {
       // Check if either is missing
       const params = new URLSearchParams(searchParams.toString());
-      if (!pageParam) {
-        params.set('_page', '1');
+      if (!offsetParam) {
+        params.set('offset', '0');
       }
       if (!limitParam) {
-        params.set('_limit', limit.toString()); // Set _limit using the 'limit' from useTodos
+        params.set('limit', limit.toString());
       }
       router.replace(`?${params.toString()}`);
     }
-  }, [searchParams, router, limit]); // Add 'limit' to dependency array
+  }, [searchParams, router, limit]);
 
   const updateUrlParams = (newParams: Record<string, string | number>) => {
     const params = new URLSearchParams(searchParams.toString());
     // Always include the current limit in the URL
-    params.set('_limit', limit.toString());
+    params.set('limit', limit.toString());
 
     for (const key in newParams) {
       if (Object.prototype.hasOwnProperty.call(newParams, key)) {
@@ -105,31 +108,31 @@ export default function PublicTodosPage() {
       }
     }
     router.push(`?${params.toString()}`);
-    if (newParams._page) {
-      // Changed to _page
-      setPageAtomValue(Number(newParams._page)); // Changed to _page
-    }
+    // if (newParams._page) {
+    //   setPageAtomValue(Number(newParams._page));
+    // }
   };
 
   const goToNextPage = () => {
     if (hasNextPage) {
-      updateUrlParams({ _page: page + 1, _limit: limit }); // Changed to _page
+      updateUrlParams({ offset: offset + limit, limit: limit });
     }
   };
 
   const goToPreviousPage = () => {
     if (hasPreviousPage) {
-      updateUrlParams({ _page: page - 1, _limit: limit }); // Changed to _page
+      updateUrlParams({ offset: offset - limit, limit: limit });
     }
   };
 
   const goToPage = (pageNumber: number) => {
-    if (pageNumber >= 1 && pageNumber <= pageCount) {
-      updateUrlParams({ _page: pageNumber, _limit: limit }); // Changed to _page
+    const newOffset = (pageNumber - 1) * limit;
+    if (newOffset >= 0 && pageNumber <= pageCount) {
+      updateUrlParams({ offset: newOffset, limit: limit });
     }
   };
 
-  const paginationPages = generatePaginationPages(page, pageCount);
+  const paginationPages = generatePaginationPages(currentPage, pageCount);
 
   return (
     <div className="container space-y-6 py-6">
@@ -182,7 +185,7 @@ export default function PublicTodosPage() {
             <PaginationItem>
               <PaginationPrevious
                 onClick={goToPreviousPage}
-                disabled={page === 1}
+                disabled={currentPage === 1}
               />
             </PaginationItem>
             {paginationPages.map((p, index) => (
@@ -190,7 +193,7 @@ export default function PublicTodosPage() {
                 {typeof p === 'number' ? (
                   <PaginationLink
                     onClick={() => goToPage(p)}
-                    isActive={page === p}
+                    isActive={currentPage === p}
                   >
                     {p}
                   </PaginationLink>
@@ -202,7 +205,7 @@ export default function PublicTodosPage() {
             <PaginationItem>
               <PaginationNext
                 onClick={goToNextPage}
-                disabled={page === pageCount}
+                disabled={currentPage === pageCount}
               />
             </PaginationItem>
           </PaginationContent>
