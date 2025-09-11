@@ -3,8 +3,7 @@
     "home": "হোম",
     "about": "আমাদের সম্পর্কে",
     "dashboard": "ড্যাশবোর্ড",
-    "todos": "Todos",
-    "publicTodos": "পাবলিক Todos"
+    "todos": "Todos"
   },
   "actions": {
     "signIn": "সাইন ইন",
@@ -46,20 +45,5 @@
   "projects": {
     "title": "প্রকল্প",
     "description": "এটি প্রকল্প পৃষ্ঠা।"
-  },
-  "todos": {
-    "title": "Todos",
-    "description": "আপনার দৈনন্দিন কাজ পরিচালনা করুন।",
-    "addTodo": "নতুন Todo যোগ করুন",
-    "todoPlaceholder": "কি করতে হবে?",
-    "add": "যোগ করুন",
-    "yourTodos": "আপনার Todos",
-    "noTodos": "কোনো Todos নেই। উপরে একটি যোগ করুন!"
-  },
-  "publicTodos": {
-    "title": "পাবলিক Todos",
-    "description": "সমস্ত পাবলিক Todos দেখুন।",
-    "yourTodos": "পাবলিক Todos",
-    "noTodos": "কোনো পাবলিক Todos উপলব্ধ নেই।"
   }
 }

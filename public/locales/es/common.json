@@ -3,8 +3,7 @@
     "home": "Inicio",
     "about": "Acerca de",
     "dashboard": "Panel",
-    "todos": "Todos",
-    "publicTodos": "Todos Públicos"
+    "todos": "Todos"
   },
   "actions": {
     "signIn": "Iniciar sesión",
@@ -46,20 +45,5 @@
   "projects": {
     "title": "Proyectos",
     "description": "Esta es la página de proyectos."
-  },
-  "todos": {
-    "title": "Todos",
-    "description": "Gestiona tus tareas diarias.",
-    "addTodo": "Añadir nueva tarea",
-    "todoPlaceholder": "¿Qué hay que hacer?",
-    "add": "Añadir",
-    "yourTodos": "Tus Tareas",
-    "noTodos": "No hay tareas aún. ¡Añade una arriba!"
-  },
-  "publicTodos": {
-    "title": "Todos Públicos",
-    "description": "Ver todas las tareas públicas.",
-    "yourTodos": "Todos Públicos",
-    "noTodos": "No hay tareas públicas disponibles."
   }
 }
