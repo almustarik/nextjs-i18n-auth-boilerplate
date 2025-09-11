@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -16,13 +16,17 @@ export function AuthGuard({ children, fallback }: AuthGuardProps) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     if (status === 'loading') return;
 
     if (!session) {
-      router.push('/sign-in');
+      const currentPath = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+      router.push(`/sign-in?callbackUrl=${encodeURIComponent(currentPath)}`);
     }
-  }, [session, status, router]);
+  }, [session, status, router, pathname, searchParams]);
 
   if (status === 'loading') {
     return (

@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 import { useI18nRouting } from '@/hooks/useI18nRouting';
 import { Code2, Menu } from 'lucide-react';
 import { useUI } from '@/hooks/useUI';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 export function Navbar() {
   const { data: session } = useSession();
@@ -19,6 +19,7 @@ export function Navbar() {
   const { push } = useI18nRouting();
   const { toggleMobileMenu } = useUI();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   return (
     <nav className="bg-card/95 supports-[backdrop-filter]:bg-card/60 sticky top-0 z-50 w-full border-b backdrop-blur">
@@ -87,7 +88,10 @@ export function Navbar() {
             <UserMenu />
           ) : (
             <Button
-              onClick={() => push(`/sign-in?callbackUrl=${pathname}`)}
+              onClick={() => {
+                const currentPath = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
+                push(`/sign-in?callbackUrl=${encodeURIComponent(currentPath)}`);
+              }}
               className="bg-accent hover:bg-accent/90"
             >
               {t('actions.signIn')}

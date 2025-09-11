@@ -1,8 +1,8 @@
-import { type NextAuthOptions, getServerSession } from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import GitHubProvider from "next-auth/providers/github"
-import FacebookProvider from "next-auth/providers/facebook"
-import type { SessionUser } from "@/types/auth"
+import { type NextAuthOptions, getServerSession } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
+import FacebookProvider from 'next-auth/providers/facebook';
+import type { SessionUser } from '@/types/auth';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -32,12 +32,12 @@ export const authOptions: NextAuthOptions = {
       : []),
   ],
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
     async signIn({ account, profile }) {
-      console.log("signIn callback account:", account);
-      console.log("signIn callback profile:", profile);
+      console.log('signIn callback account:', account);
+      console.log('signIn callback profile:', profile);
       /*
       if (account?.provider === "google") {
         const id_token = account.id_token;
@@ -74,26 +74,32 @@ export const authOptions: NextAuthOptions = {
         }
       }
       */
-      return true // Allow sign in by default for other providers or if the logic is commented out
+      return true; // Allow sign in by default for other providers or if the logic is commented out
     },
     async jwt({ token, user }) {
-      console.log("JWT callback token:", token);
+      console.log('JWT callback token:', token);
       if (user) {
-        token.role = (user as any).role || "user"
+        token.role = (user as any).role || 'user';
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        ;(session.user as SessionUser).id = token.sub!
-        ;(session.user as SessionUser).role = (token.role as "user" | "admin") || "user"
+        (session.user as SessionUser).id = token.sub!;
+        (session.user as SessionUser).role =
+          (token.role as 'user' | 'admin') || 'user';
       }
-      return session
+      return session;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log('Redirect callback URL:', url);
+      console.log('Redirect callback Base URL:', baseUrl);
+      return url;
     },
   },
   pages: {
-    signIn: "/sign-in",
+    signIn: '/sign-in',
   },
-}
+};
 
-export const getServerAuthSession = () => getServerSession(authOptions)
+export const getServerAuthSession = () => getServerSession(authOptions);
