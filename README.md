@@ -47,7 +47,7 @@ Follow these steps to get your development environment set up.
 
 1.  **Clone the repository:**
     ```bash
-    git clone <repository-url>
+    git clone &lt;repository-url&gt;
     cd nextjs-i18n-app
     ```
 2.  **Install dependencies:**
@@ -199,9 +199,9 @@ export function Navbar() {
 
   return (
     // ...
-    <button onClick={() => push("/")}>{t("navigation.home")}</button>
-    <button onClick={() => push("/about")}>{t("navigation.about")}</button>
-    <button onClick={() => push("/sign-in")}>{t("actions.signIn")}</button>
+    &lt;button onClick={() => push("/")}&gt;{t("navigation.home")}&lt;/button&gt;
+    &lt;button onClick={() => push("/about")}&gt;{t("navigation.about")}&lt;/button&gt;
+    &lt;button onClick={() => push("/sign-in")}&gt;{t("actions.signIn")}&lt;/button&gt;
     // ...
   )
 }
