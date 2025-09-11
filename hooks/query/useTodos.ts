@@ -1,63 +1,55 @@
+import { useToast } from '@/components/ui/use-toast';
+import { createTodo, deleteTodo, getTodos, updateTodo } from '@/lib/api/todos';
+import { DEFAULT_PAGINATION_LIMIT } from '@/lib/constants';
+import type { Todo } from '@/types/entities';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { usePaginatedQuery } from './usePaginatedQuery';
-import { getTodos, createTodo, updateTodo, deleteTodo } from '@/lib/api/todos';
-import type { Todo } from '@/types/entities';
-import { useToast } from '@/components/ui/use-toast';
-import { useSearchParams } from 'next/navigation';
-import { DEFAULT_PAGINATION_LIMIT } from '@/lib/constants';
 
 export const TODO_QUERY_KEY = 'todos';
 
-// Define the return type of useTodos
-interface UseTodosResult {
-  data: Todo[] | undefined;
-  totalCount: number;
-  offset: number;
-  limit: number;
-  pageCount: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-  isLoading: boolean;
-  isFetching: boolean;
-}
-
-export const useTodos = (params?: {
+export function useTodos(params?: {
   userId?: number;
   filters?: Record<string, any>;
-}): UseTodosResult => {
-  const searchParams = useSearchParams();
-  const offsetParam = searchParams.get('offset');
-  const initialOffset = offsetParam ? parseInt(offsetParam, 10) : 0;
+}) {
+  const { data, totalCount, isLoading, isFetching, effectiveParams } =
+    usePaginatedQuery<Todo[]>(
+      [TODO_QUERY_KEY, 'list', params],
+      0,
+      DEFAULT_PAGINATION_LIMIT,
+      (p) => getTodos({ ...params, ...p, filters: params?.filters }),
+      {
+        syncFromUrl: true,
+        whitelistKeys: [
+          'offset',
+          'limit',
+          'search',
+          'sort',
+          'status',
+          'something',
+        ],
+        staleTime: 30_000,
+      }
+    );
 
-  const limitParam = searchParams.get('limit');
-  const limit = limitParam
-    ? parseInt(limitParam, 10)
-    : DEFAULT_PAGINATION_LIMIT;
+  const offset = Number(effectiveParams.offset) || 0;
+  const limit = Number(effectiveParams.limit) || DEFAULT_PAGINATION_LIMIT;
 
-  const { data, ...queryResult } = usePaginatedQuery<Todo[]>(
-    [TODO_QUERY_KEY, 'list', params],
-    initialOffset,
-    limit,
-    ({ offset: o, limit: l }) =>
-      getTodos({ ...params, offset: o, limit: l, filters: params?.filters })
-  );
-
-  const totalCount = data?.totalCount ?? 0;
-  const pageCount = Math.ceil(totalCount / limit);
-  const hasNextPage = initialOffset + limit < totalCount;
-  const hasPreviousPage = initialOffset > 0;
+  const pageCount = limit > 0 ? Math.ceil(totalCount / limit) : 0;
+  const hasNextPage = offset + limit < totalCount;
+  const hasPreviousPage = offset > 0;
 
   return {
-    data: data?.data,
+    data,
     totalCount,
-    offset: initialOffset,
+    offset,
     limit,
     pageCount,
     hasNextPage,
     hasPreviousPage,
-    ...queryResult,
+    isLoading,
+    isFetching,
   };
-};
+}
 
 export const useAddTodo = () => {
   const queryClient = useQueryClient();
@@ -68,10 +60,7 @@ export const useAddTodo = () => {
       mutationFn: createTodo,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [TODO_QUERY_KEY] });
-        toast({
-          title: 'Success',
-          description: 'Todo added successfully.',
-        });
+        toast({ title: 'Success', description: 'Todo added successfully.' });
       },
       onError: (error) => {
         toast({
@@ -92,10 +81,7 @@ export const useUpdateTodo = () => {
     mutationFn: ({ id, ...data }) => updateTodo(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TODO_QUERY_KEY] });
-      toast({
-        title: 'Success',
-        description: 'Todo updated successfully.',
-      });
+      toast({ title: 'Success', description: 'Todo updated successfully.' });
     },
     onError: (error) => {
       toast({
@@ -115,10 +101,7 @@ export const useDeleteTodo = () => {
     mutationFn: deleteTodo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [TODO_QUERY_KEY] });
-      toast({
-        title: 'Success',
-        description: 'Todo deleted successfully.',
-      });
+      toast({ title: 'Success', description: 'Todo deleted successfully.' });
     },
     onError: (error) => {
       toast({

@@ -1,34 +1,23 @@
 import { apiClient } from '@/lib/axios';
-import type { Todo } from '@/types/entities';
-
 import type { PaginationParams } from '@/types/common';
+import type { Todo } from '@/types/entities';
 
 const TODO_API_URL = 'https://jsonplaceholder.typicode.com/todos';
 
-export const getTodos = async ({
-  offset = 0,
-  limit = 10,
-  filters,
-}: PaginationParams & { filters?: Record<string, any> }): Promise<{
-  data: Todo[];
-  totalCount: number;
-}> => {
-  const params: Record<string, any> = {
-    _start: offset,
-    _limit: limit,
+export const getTodos = async (
+  params: (PaginationParams & Record<string, any>) | undefined
+): Promise<{ data: Todo[]; totalCount: number }> => {
+  const { filters, ...rest } = params || {};
+
+  const requestParams: Record<string, any> = {
+    ...rest,
+    ...(filters ?? {}),
   };
 
-  if (filters) {
-    for (const key in filters) {
-      if (Object.prototype.hasOwnProperty.call(filters, key)) {
-        params[key] = filters[key];
-      }
-    }
-  }
-
   const response = await apiClient.get<Todo[]>(TODO_API_URL, {
-    params,
+    params: requestParams,
   });
+
   const totalCount = Number(response.headers['x-total-count'] || 0);
   return { data: response.data, totalCount };
 };
