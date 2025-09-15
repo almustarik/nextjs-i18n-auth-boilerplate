@@ -9,7 +9,8 @@
   },
   "actions": {
     "signIn": "Iniciar sesión",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "getStarted": "Comenzar"
   },
   "auth": {
     "signIn": "Iniciar sesión",

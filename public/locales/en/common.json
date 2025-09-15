@@ -9,7 +9,8 @@
   },
   "actions": {
     "signIn": "Sign In",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "getStarted": "Get Started"
   },
   "auth": {
     "signIn": "Sign In",

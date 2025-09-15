@@ -9,7 +9,8 @@
   },
   "actions": {
     "signIn": "সাইন ইন",
-    "signOut": "সাইন আউট"
+    "signOut": "সাইন আউট",
+    "getStarted": "getStarted"
   },
   "auth": {
     "signIn": "সাইন ইন",

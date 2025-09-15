@@ -9,7 +9,8 @@
   },
   "actions": {
     "signIn": "Se connecter",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "getStarted": "Commencer"
   },
   "auth": {
     "signIn": "Se connecter",
