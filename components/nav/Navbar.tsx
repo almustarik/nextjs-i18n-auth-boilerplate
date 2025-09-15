@@ -100,7 +100,6 @@ export function Navbar() {
   return (
     <>
       <nav className="prose bg-card/95 supports-[backdrop-filter]:bg-card/60 sticky top-0 z-50 w-full border-b backdrop-blur">
-        <h1>Navbar</h1>
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-6">
             <Link
@@ -120,7 +119,7 @@ export function Navbar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="text-muted-foreground hover:text-foreground cursor-pointer text-7xl text-sm font-medium transition-colors"
+                    className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium transition-colors"
                   >
                     {t(item.labelKey)}
                   </Link>
